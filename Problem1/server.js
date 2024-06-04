@@ -1,13 +1,13 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const clientID = 'ab8e9f79-d40d-4e54-b718-8ba9a0592d8c';
 const clientSecret = 'UUBWVadBxuWZWlzN';
-let accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiZXhwIjoxNzE3NTA3MTMxLCJpYXQiOjE3MTc1MDY4MzEsImlzcyI6IkFmZm9yZG1lZCIsImp0aSI6ImFiOGU5Zjc5LWQ0MGQtNGU1NC1iNzE4LThiYTlhMDU5MmQ4YyIsInN1YiI6Im11Z3VudGhhbnNhcmF2YW5hbjA3QGdtYWlsLmNvbSJ9LCJjb21wYW55TmFtZSI6IlVuaXF1ZSIsImNsaWVudElEIjoiYWI4ZTlmNzktZDQwZC00ZTU0LWI3MTgtOGJhOWEwNTkyZDhjIiwiY2xpZW50U2VjcmV0IjoiVVVCV1ZhZEJ4dVdaV2x6TiIsIm93bmVyTmFtZSI6Ik11Z3VudGhhbiIsIm93bmVyRW1haWwiOiJtdWd1bnRoYW5zYXJhdmFuYW4wN0BnbWFpbC5jb20iLCJyb2xsTm8iOiI3MSJ9.q-uWPUgCuqnIoRgpvqvEZ5IiF3OA3ePwVFlETixSWYA';
-
+let accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiZXhwIjoxNzE3NTIxNDc2LCJpYXQiOjE3MTc1MjExNzYsImlzcyI6IkFmZm9yZG1lZCIsImp0aSI6ImFiOGU5Zjc5LWQ0MGQtNGU1NC1iNzE4LThiYTlhMDU5MmQ4YyIsInN1YiI6Im11Z3VudGhhbnNhcmF2YW5hbjA3QGdtYWlsLmNvbSJ9LCJjb21wYW55TmFtZSI6IlVuaXF1ZSIsImNsaWVudElEIjoiYWI4ZTlmNzktZDQwZC00ZTU0LWI3MTgtOGJhOWEwNTkyZDhjIiwiY2xpZW50U2VjcmV0IjoiVVVCV1ZhZEJ4dVdaV2x6TiIsIm93bmVyTmFtZSI6Ik11Z3VudGhhbiIsIm93bmVyRW1haWwiOiJtdWd1bnRoYW5zYXJhdmFuYW4wN0BnbWFpbC5jb20iLCJyb2xsTm8iOiI3MSJ9.x7s4aM9QyJWaDfCI_KT_n7ctNUxo5ElzL--ljaGrzdU';
 async function getAuthToken(clientID, clientSecret) {
     const authDetails = {
         companyName: "Unique",
@@ -25,6 +25,8 @@ async function getAuthToken(clientID, clientSecret) {
         console.error('Error obtaining the auth token:', error.response ? error.response.data : error.message);
     }
 }
+
+app.use(cors());
 
 app.use(async (req, res, next) => {
     if (!accessToken) {
@@ -89,3 +91,4 @@ app.get('/categories/:categoryname/products/:productid', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
