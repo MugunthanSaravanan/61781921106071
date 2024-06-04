@@ -51,8 +51,8 @@ This project is designed to facilitate the registration of companies, obtain acc
 ---
 
 ## Contributors
-- [Mugunthan Saravanan]("https://mugunthan.me")
-- [Mail]("https://mailto:mailtomugunthans@gmail.com")
+- [Mugunthan Saravanan](https://mugunthan.me)
+- [Mail](https://mailto:mailtomugunthans@gmail.com)
 
 ---
 
