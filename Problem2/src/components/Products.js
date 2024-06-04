@@ -1,56 +1,69 @@
-import React, { useState, useEffect } from 'react';
+// src/components/Products.js
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Container, Grid, Card, CardContent, Typography, Button } from '@mui/material';
+import './Products.css';
 
-const Products = () => {
+function Products() {
+  const [category, setCategory] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [top, setTop] = useState('');
   const [products, setProducts] = useState([]);
-  const [category, setCategory] = useState('Phone');
-  const [top, setTop] = useState(5);
-
-  useEffect(() => {
-    fetchProducts();
-  }, [category, top]);
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/categories/${category}/products?top=${top}`);
+      const response = await axios.get(`http://localhost:3000/categories/${category}/products`, {
+        params: {
+          top,
+          minPrice,
+          maxPrice
+        }
+      });
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching products:', error.response ? error.response.data : error.message);
     }
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetchProducts();
+  };
+
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        Top {top} Products in {category}
-      </Typography>
-      <Grid container spacing={4}>
-        {products.map((product, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{product.productName}</Typography>
-                <Typography>Price: ${product.price}</Typography>
-                <Typography>Rating: {product.rating}</Typography>
-                <Typography>Discount: {product.discount}%</Typography>
-                <Typography>Availability: {product.availability}</Typography>
-                <Button
-                  component={Link}
-                  to={`/categories/${category}/products/${index}`} // Use index or a unique identifier
-                  variant="contained"
-                  color="primary"
-                >
-                  View Details
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
+    <div className="form-container">
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Category:</label>
+          <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label>Min Price:</label>
+          <input type="number" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label>Max Price:</label>
+          <input type="number" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} required />
+        </div>
+        <div className="form-group">
+          <label>Top Products:</label>
+          <input type="number" value={top} onChange={(e) => setTop(e.target.value)} required />
+        </div>
+        <button type="submit">Fetch Products</button>
+      </form>
+      <div className="product-list">
+        {products.map((product) => (
+          <div className="product-card" key={product.productName}>
+            <h3>{product.productName}</h3>
+            <p>Price: {product.price}</p>
+            <p>Rating: {product.rating}</p>
+            <p>Discount: {product.discount}</p>
+            <p>Availability: {product.availability}</p>
+          </div>
         ))}
-      </Grid>
-    </Container>
+      </div>
+    </div>
   );
-};
+}
 
 export default Products;

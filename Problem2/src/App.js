@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Products from './components/Products';
@@ -9,7 +8,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Products />} />
-        <Route path="/categories/:categoryname/products/:productid" element={<ProductDetails />} />
+        <Route path="/categories/Phone/products/:productName" element={<ProductDetails />} />
       </Routes>
     </Router>
   );

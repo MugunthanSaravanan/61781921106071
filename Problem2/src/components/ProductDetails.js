@@ -1,38 +1,49 @@
-// src/components/ProductDetails.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 const ProductDetails = () => {
-  const { categoryname, productid } = useParams();
+  const { productName } = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/categories/Phone/products?top=10&minPrice=2000&maxPrice=5000`);
+        const productDetails = response.data.find(p => p.productName === productName);
+        setProduct(productDetails);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
     fetchProductDetails();
-  }, [categoryname, productid]);
+  }, [productName]);
 
-  const fetchProductDetails = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/categories/${categoryname}/products/${productid}`);
-      setProduct(response.data);
-    } catch (error) {
-      console.error('Error fetching product details:', error);
-    }
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!product) return <Typography>Loading...</Typography>;
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        {product.productName}
-      </Typography>
-      <Typography>Price: ${product.price}</Typography>
-      <Typography>Rating: {product.rating}</Typography>
-      <Typography>Discount: {product.discount}%</Typography>
-      <Typography>Availability: {product.availability}</Typography>
-    </Container>
+    <div>
+      <h1>{product.productName}</h1>
+      <p>Price: ${product.price}</p>
+      <p>Rating: {product.rating}</p>
+      <p>Discount: {product.discount}%</p>
+      <p>Availability: {product.availability}</p>
+    </div>
   );
 };
 
